@@ -14,3 +14,4 @@ class Item(me.Document):
     name=me.StringField(required=True, max_length=100)
     description=me.StringField(required=True, max_length=100)
     price=me.IntField()
+    meta={'collection':'items', 'indexes':['item_id']}
