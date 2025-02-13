@@ -27,3 +27,21 @@ class ItemDetailView(APIView):
             return Response(serializer.data)
         except Item.DoesNotExist:
             raise NotFound(detail="Item not Found", code=404)
+        
+class ItemUpdateView(APIView):
+    def put(self,request,pk,format=None):
+        item=Item.objects.get(item_id=pk)
+        serializer=ItemSerializer(item,data=request.data,partial=False)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class ItemDeleteView(APIView):
+    def delete(self,request,pk):
+        try:
+            item=Item.objects.get(item_id=pk)
+            item.delete()
+            return Response({"message": "Item deleted Successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Item.DoesNotExist:
+            return Response({"error": "Item not Found"}, status=status.HTTP_404_NOT_FOUND)
