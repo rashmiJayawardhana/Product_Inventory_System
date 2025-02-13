@@ -1,42 +1,38 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+.item-main{
+  width: 587px;
+  height: fit-content;
+  margin-left: 75px;
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
+h3{
+  color: blueviolet;
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
+.addeditpanel{
+  width: 587px;
+  height: 60px;
+  border: 1px solid;
+  background-color: aquamarine;
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
 }
+.searchinput{
+  margin-top: 25px;
+  border: 1px solid;
+  border-radius: 5px;
+  width: 211px;
+  height: 25px;
+  background-color: aliceblue;
 
-.card {
-  padding: 2em;
 }
+.addeditpaneldiv{
+  margin-left: 5px;
+  display: inline-block;
+}
+.addeditinput{
+  border: 1px solid;
+  border-radius: 5px;
+  width: 140px;
+  height: 25px;
+  background-color: antiquewhite;
 
-.read-the-docs {
-  color: #888;
 }
