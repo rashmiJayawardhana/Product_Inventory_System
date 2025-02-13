@@ -36,3 +36,21 @@ h3{
   background-color: antiquewhite;
 
 }
+.addButton{
+  border: 1px solid;
+  border-radius: 5px;
+  width: 60px;
+  font-size: 11px;
+  line-height: 15px;
+  margin-left: 5px;
+  background-color: rgb(187, 245, 99);
+}
+.cancelButton{
+  border: 1px solid;
+  border-radius: 5px;
+  width: 60px;
+  font-size: 11px;
+  line-height: 15px;
+  margin-left: 5px;
+  background-color: rgb(241, 135, 236);
+}
