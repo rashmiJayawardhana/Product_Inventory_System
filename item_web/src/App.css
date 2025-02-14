@@ -54,3 +54,39 @@ h3{
   margin-left: 5px;
   background-color: rgb(241, 135, 236);
 }
+.item-table{
+  margin-top: 12px;
+  width: 587px;
+  height: fit-content;
+  border: 1px solid;
+  border-collapse: collapse;
+  text-align: center;
+}
+th{
+  border: 1px solid;
+  font-size: 15px;
+  line-height: 18px;
+  background-color: rgb(165, 165, 247);
+  color: yellow;
+}
+tr:nth-child(even){
+  background-color: coral;
+}
+.editButton{
+  border: 1px solid;
+  font-size: 10px;
+  line-height: 12px;
+  width: 50px;
+  background-color: rgb(168, 224, 82);
+  border-radius: 5px;
+  color: blue;
+}
+.deleteButton{
+  border: 1px solid;
+  font-size: 10px;
+  line-height: 12px;
+  width: 50px;
+  background-color: rgb(240, 122, 204);
+  border-radius: 5px;
+  color: blue;
+}

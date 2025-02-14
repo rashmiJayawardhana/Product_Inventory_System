@@ -10,12 +10,36 @@ function App() {
     {Header:"ItemID", accessor:"item_id"},
     {Header:"Name", accessor:"name"},
     {Header:"Description", accessor:"description"},
-    {Header:"Price", accessor:"price"}
+    {Header:"Price", accessor:"price"},
+    {Header:"Edit", id:"Edit", accessor:"edit", Cell:props=>(<button className='editButton'>Edit</button>)},
+    {Header:"Delete", id:"Delete", accessor:"delete", Cell:props=>(<button className='deleteButton'>Delete</button>)},
   ],[]);
 
   const data=React.useMemo(()=>items,[]);
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow}=useTable({columns, data:items});
 
+  {/*POST API*/}
+  const[itemData, setItemData]=useState({name:"", description:"", price:""})
+  const handleChange=(e)=>{
+    setItemData({...itemData, [e.target.name]:e.target.value});
+    console.log("itemData::", itemData);   
+  }
+
+  const handleAddEdit=async(e)=>{
+    e.preventDefault();
+    await axios.post("http://127.0.0.1:8000/api/items/",itemData)
+      .then((response) => {
+        console.log("Data received:", response.data);
+      })
+      clearAll(); //Clear Form Fields
+  };
+
+  const clearAll=()=>{
+    setItemData({name:"", description:"", price:""});
+    getItems();
+  }
+
+  {/*get all API*/}
   const getItems = () => {
     axios.get("http://127.0.0.1:8000/api/items/")
       .then((response) => {
@@ -38,17 +62,17 @@ function App() {
         <div className='addeditpanel'>
           <div className='addeditpaneldiv'>
             <label htmlFor='name'>Name</label> <br/>
-            <input className='addeditinput' type='text' name='name' id='name'/>
+            <input className='addeditinput' type='text' value={itemData.name} onChange={handleChange} name='name' id='name'/>
           </div>
           <div className='addeditpaneldiv'>
             <label htmlFor='description'>Description</label> <br/>
-            <input className='addeditinput' type='text' name='description' id='description'/>
+            <input className='addeditinput' type='text' value={itemData.description} onChange={handleChange} name='description' id='description'/>
           </div>
           <div className='addeditpaneldiv'>
             <label htmlFor='price'>Price</label> <br/>
-            <input className='addeditinput' type='text' name='price' id='price'/>
+            <input className='addeditinput' type='text' value={itemData.price} onChange={handleChange} name='price' id='price'/>
           </div>
-          <button className='addButton'>Add</button>
+          <button className='addButton' onClick={handleAddEdit}>Add</button>
           <button className='cancelButton'>Cancel</button>
 
         </div>
