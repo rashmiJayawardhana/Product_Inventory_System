@@ -5,6 +5,7 @@ class ItemSerializer(serializers.Serializer):
     item_id=serializers.IntegerField(read_only=True)
     name=serializers.CharField(max_length=100)
     description=serializers.CharField(max_length=100)
+    quantity=serializers.IntegerField()
     price=serializers.IntegerField()
 
     def create(self, validated_data):

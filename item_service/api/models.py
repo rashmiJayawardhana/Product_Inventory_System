@@ -13,5 +13,6 @@ class Item(me.Document):
     item_id=me.IntField(unique=True,default=lambda:Counter.get_next_value("item_id"))
     name=me.StringField(required=True, max_length=100)
     description=me.StringField(required=True, max_length=100)
+    quantity=me.IntField()
     price=me.IntField()
     meta={'collection':'items', 'indexes':['item_id']}
