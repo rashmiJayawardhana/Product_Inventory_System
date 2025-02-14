@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useTable } from 'react-table';
+import { useTable, useGlobalFilter, useSortBy, usePagination } from 'react-table';
 import * as React from 'react';
 import axios from 'axios';
 import './App.css';
@@ -36,7 +36,9 @@ function App() {
   const data = useMemo(() => items, [items]);
 
   // Initialize table instance
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
+  const { getTableProps, getTableBodyProps, headerGroups, page, prepareRow, setGlobalFilter, state, previousPage, nextPage, pageCount } = useTable({ columns, data, initialState:{pageSize:4} }, useGlobalFilter, useSortBy, usePagination);
+
+  const { globalFilter, pageIndex } = state;
 
   {/*POST API*/}
   // State for managing form input
@@ -139,15 +141,17 @@ function App() {
         </div>
 
         {/* Search bar*/}
-        <input className='searchinput' type="search" name="inputsearch" id="inputsearch" placeholder="Search Items Here"/>
-        
+        <input className='searchinput' type="search" value={globalFilter || ""} onChange={(e)=>setGlobalFilter(e.target.value)} name="inputsearch" id="inputsearch" placeholder="Search Items Here"/>
+
         {/* Table displaying the items */}
         <table className='item-table' {...getTableProps()}>
           <thead>
             {...headerGroups.map((hdg)=>(
               <tr {...hdg.getHeaderGroupProps()} key={hdg.id}>
                 {hdg.headers.map((column)=>(
-                  <th {...column.getHeaderProps()} key={column.id}>{column.render('Header')}</th>
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>{column.render('Header')}
+                  {column.isSorted && <span>{column.isSortedDesc? "⬆":"⬇" }</span> }
+                  </th>
                 ))}           
               </tr>
             ))}
@@ -156,7 +160,7 @@ function App() {
             </tr>
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row)=>{
+            {page.map((row)=>{
               prepareRow(row);
               return(<tr {...row.getRowProps()} key={row.id}>
                 {row.cells.map((cell)=>(
@@ -168,6 +172,15 @@ function App() {
             })}            
           </tbody>
         </table>
+
+        <div className='paginationdiv'>
+          <button className='paginationdivbutton' onClick={} >First</button>
+          <button className='paginationdivbutton' onClick={previousPage} >Prev</button>
+          <span className='index'>{pageIndex} of {pageCount}</span>
+          <button className='paginationdivbutton' onClick={nextPage} >Next</button>
+          <button className='paginationdivbutton'>Last</button>
+
+        </div>
       </div>
     </>
   )
