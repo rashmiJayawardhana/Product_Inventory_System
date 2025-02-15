@@ -1,4 +1,4 @@
-export default function NumberInput({ value, onChange, onIncrement, onDecrement }) {
+export default function NumberInput({ value, onChange }) {
   return (
     <div className="flex items-center border border-blue-500 rounded-lg p-1 focus-within:ring-2 focus-within:ring-blue-500">
       <input
