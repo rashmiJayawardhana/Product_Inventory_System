@@ -1,6 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTable, useGlobalFilter, useSortBy, usePagination } from 'react-table';
-import * as React from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 
