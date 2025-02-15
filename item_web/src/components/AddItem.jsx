@@ -124,6 +124,7 @@ function AddItem() {
                     </div>
                   </div>
 
+                  {/* Description Field */}
                   <div className="sm:col-span-5 sm:row-start-3">
                     <label htmlFor="description" className="block text-base font-medium leading-6 text-gray-900">
                       Description
@@ -140,6 +141,7 @@ function AddItem() {
                     </div>
                   </div>
 
+                  {/* Quantity Field */}
                   <div className="sm:col-span-2 sm:row-start-4">
                     <label htmlFor="quantity" className="block text-base font-medium leading-6 text-gray-900">Quantity</label>
                     <div className="mt-2">
@@ -154,6 +156,7 @@ function AddItem() {
                     </div>
                   </div>
 
+                  {/* Price Field */}
                   <div className="sm:col-span-2 sm:row-start-5">
                     <label htmlFor="price" className="block text-base font-medium leading-6 text-gray-900">Price</label>
                     <div className="mt-2">
@@ -168,8 +171,13 @@ function AddItem() {
                     </div>
                   </div>
 
+                  {/* API Error Message */}
+                  {apiError && <p className="text-red-500">{apiError}</p>}
+
                 </div>
               </div>
+
+              {/* Action Buttons */}
               <div className="flex items-center justify-end mt-5 mb-5 mr-5 gap-x-6">
                 <button 
                   type="submit" 
