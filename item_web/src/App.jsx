@@ -8,6 +8,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/additem" element={<AddItem />} />
+        <Route path="/update/:itemID" element={<AddItem/>}/>
         <Route path="/table" element={<ItemList />} />
         <Route path="/" element={<ItemList />} /> {/* Default to Table Page */}
       </Routes>

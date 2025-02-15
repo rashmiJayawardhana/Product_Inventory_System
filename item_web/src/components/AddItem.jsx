@@ -91,11 +91,11 @@ function AddItem() {
   };
 
   return (
-    <div className="relative bg-zinc-100 bg-contain h-fit w-screen">
+    <div className="relative bg-zinc-100 bg-contain h-fit w-screen p-8 pb-23">
       <div className="m-10 mt-1 mb-1 text-xl font-semibold text-gray-900">      
         <form method="POST" onSubmit={handleAddEdit} encType="multipart/form-data">
           <div className="space-y-5">
-            <h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e] pt-2 items-centered ml-5">
+            <h1 className="place-items-baseline text-4xl leading-relaxed py-2 font-bold text-left text-[#001b5e] items-centered ml-5">
               {itemData.item_id ? "Update Item" : "Add Item"}
             </h1>
             <div className="relative ml-5 mr-5 overflow-x-auto bg-white rounded-lg shadow-md">
