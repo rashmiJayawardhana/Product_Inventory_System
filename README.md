@@ -32,6 +32,31 @@ The Product Inventory System is a full-stack web application built using React J
 - **Backend:** Python, Django, Django REST Framework
 - **Database:** MongoDB
 
+## Project Structure
+
+```
+PRODUCT_INVENTORY_SYSTEM/
+│── .venv/                     # Virtual environment for backend dependencies
+│── item_service/               # Backend folder (Django API)
+│   │── api/                    # Contains API-related modules
+│   │── item_service/           # Main Django service configuration
+│   │── manage.py               # Django project management script
+│
+│── item_web/                   # Frontend folder (React + Vite)
+│   │── node_modules/           # Dependencies for frontend
+│   │── public/                 # Static assets like images and icons
+│   │── src/                    # Source code for React components
+│   │── .gitignore              # Files to be ignored in Git
+│   │── eslint.config.js        # ESLint configuration for code linting
+│   │── index.html              # Main HTML file for React
+│   │── package-lock.json       # Dependency lock file
+│   │── package.json            # Project dependencies and scripts
+│   │── README.md               # Frontend-specific documentation
+│   │── vite.config.js          # Vite configuration file
+│
+│── README.md                   # Project-wide documentation
+```
+
 ### Libraries & Tools Used
 
 The project utilizes the following libraries:
