@@ -1,12 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function AddItem() {
+  const { itemID } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   
-  // State to track form data
-  const [itemData, setItemData] = useState({ name: "", description: "", quantity: "", price: "" });
+  // Retrieve passed item data if available
+  const [itemData, setItemData] = useState(
+    location.state?.itemData || { item_id: null, name: "", description: "", quantity: "", price: "" }
+  );
+
+  // Fetch item data if editing an existing item
+  useEffect(() => {
+    if (itemID) {
+      fetchFormDataById(itemID);
+    }
+  }, [itemID]);
+
+  // Function to fetch item data by ID
+  const fetchFormDataById = async (id) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/items/${id}/`);
+      setItemData(response.data);
+    } catch (error) {
+      console.error("Error fetching item data:", error);
+    }
+  };
 
   // State for input validation errors
   const [errors, setErrors] = useState({});
@@ -40,13 +62,13 @@ function AddItem() {
     }
 
     // Validate Quantity (should be a positive number)
-    if (!itemData.quantity.trim() || isNaN(itemData.quantity) || Number(itemData.quantity) <= 0) {
+    if (!itemData.quantity || isNaN(itemData.quantity) || Number(itemData.quantity) <= 0) {
       errorsCopy.quantity = 'Quantity must be a positive number!';
       valid = false;
     }
 
     // Validate Price (should be a positive number)
-    if (!itemData.price.trim() || isNaN(itemData.price) || Number(itemData.price) <= 0) {
+    if (!itemData.price || isNaN(itemData.price) || Number(itemData.price) <= 0) {
       errorsCopy.price = 'Price must be a positive number!';
       valid = false;
     }
@@ -67,11 +89,13 @@ function AddItem() {
         await axios.put(`http://127.0.0.1:8000/api/items/${itemData.item_id}/update/`, itemData, {
           headers: { "Content-Type": "application/json" },
         });
+        Swal.fire("Success", "Item updated successfully!", "success");
       } else {
         // Create new item
         await axios.post("http://127.0.0.1:8000/api/items/", itemData, {
           headers: { "Content-Type": "application/json" },
         });
+        Swal.fire("Success", "Item added successfully!", "success");
       }
 
       // Reset form fields after successful API call
@@ -80,6 +104,7 @@ function AddItem() {
       navigate('/');  // Redirect to home page
     } catch (error) {
       console.error("Error saving item:", error);
+      Swal.fire("Error", "Failed to save item", "error");
       setApiError("Failed to save item. Please try again.");
     }
   };

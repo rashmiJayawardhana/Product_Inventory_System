@@ -7,7 +7,7 @@ import { LiaUserEditSolid, LiaUserTimesSolid } from 'react-icons/lia';
 
 function NumberInput({ value, onChange }) {
     return (
-      <div className="flex items-center border border-blue-500 rounded-lg p-1 focus-within:ring-2 focus-within:ring-blue-500">
+      <div>
         <input
           type="number"
           value={value}
@@ -24,13 +24,54 @@ function ItemList() {
   // State for storing the list of items fetched from the API
   const [items, setItems] = useState([]);
 
-  // State to track quantities
-  const [quantities, setQuantities] = useState({});
-
-  // Update quantity state when changed
-  const handleQuantityChange = useCallback((itemId, value) => {
-    setQuantities(prev => ({ ...prev, [itemId]: value }));
+  // Fetch all items from API
+  const getItems = async () => {
+    axios.get("http://127.0.0.1:8000/api/items/")
+      .then((response) => {
+        console.log("Data received:", response.data);
+        setItems(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching items:", error);
+      });
+  };
+ 
+  // Fetch data on component mount
+  useEffect(() => {
+    getItems();
   }, []);
+
+  // Handle quantity change
+  const handleQuantityChange = async (itemId, newQuantity) => {
+    if (newQuantity < 0) return; // Prevent negative values
+
+    const itemToUpdate = items.find(item => item.item_id === itemId);
+    if (!itemToUpdate) return; // Ensure item exists
+
+    try {
+        const response = await axios.put(
+            `http://127.0.0.1:8000/api/items/${itemId}/update/`,
+            { 
+                name: itemToUpdate.name,
+                description: itemToUpdate.description,
+                price: itemToUpdate.price,
+                quantity: newQuantity 
+            },  // Send full item data
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+
+        console.log("Update successful:", response.data);
+
+        // Update local state
+        setItems((prevItems) =>
+            prevItems.map((item) =>
+                item.item_id === itemId ? { ...item, quantity: newQuantity } : item
+            )
+        );
+    } catch (error) {
+        console.error("Error updating quantity:", error.response?.data || error);
+    }
+  };
 
   // Define table columns
   const columns = useMemo(() => [
@@ -42,11 +83,10 @@ function ItemList() {
       accessor: "quantity",
       className: "w-36 px-4 py-3",
       Cell: ({ row }) => {
-        const itemId = row.original.item_id;
         return (
           <NumberInput
-            value={quantities[itemId] || 1}
-            onChange={(value) => handleQuantityChange(itemId, value)}
+            value={row.original.quantity || 1}
+            onChange={(value) => handleQuantityChange(row.original.item_id, value)}
           />
         );
       }
@@ -80,7 +120,7 @@ function ItemList() {
                         </div>               
       )
     },
-  ], [quantities]); // Added dependencies
+  ], [items]); // Added dependencies
 
   // Memoize items to avoid unnecessary re-renders
   const data = useMemo(() => items, [items]);
@@ -106,38 +146,22 @@ function ItemList() {
 
   // Handle edit button click
   const handleEdit = (item) => {
-    navigate(`/update/${item.item_id}`);
-    //setItemData(item);
+    navigate(`/update/${item.item_id}`, { state: { itemData: item } });
   };
-
+  
   // Handle delete operation
   const handleDelete = async (item) => {
     if (window.confirm("Are you sure you want to delete?")) {
         try {
             await axios.delete(`http://127.0.0.1:8000/api/items/${item.item_id}/delete/`);
             getItems();
+            alert("Item deleted successfully!");
         } catch (error) {
             console.error("Error deleting item:", error);
+            alert("Failed to delete item.");
         }
     }
   };
-
-  // Fetch all items from API
-  const getItems = () => {
-    axios.get("http://127.0.0.1:8000/api/items/")
-      .then((response) => {
-        console.log("Data received:", response.data);
-        setItems(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching items:", error);
-      });
-  };
- 
-  // Fetch data on component mount
-  useEffect(() => {
-    getItems();
-  }, []);
 
   const addNewItem = () => {
     navigate("/additem");
