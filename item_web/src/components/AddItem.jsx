@@ -8,10 +8,24 @@ function AddItem() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Retrieve passed item data if available
+  // Initialize item data, prefilling from location state if available
   const [itemData, setItemData] = useState(
     location.state?.itemData || { item_id: null, name: "", description: "", quantity: "", price: "" }
   );
+
+  // State for form validation errors
+  const [errors, setErrors] = useState({});
+
+  // State for API error messages
+  const [apiError, setApiError] = useState("");
+
+  const [itemNames, setItemNames] = useState(() => {
+    return JSON.parse(localStorage.getItem("itemNames")) || [
+      "MacBook Pro", "PixelBook Go", "Dell XPS 13", "Zenbook", "HP Spectre", "Surface Laptop 4", "PixelBook 2", "Razer Blade 15", "Alienware M15", "Acer Predator Helios", "MacBook Air", "Asus ROG Strix", "ThinkPad X1", "MSI Stealth 15", "Chromebook Plus", "Lenovo Legion 5", "Dell Inspiron 15", "HP Pavilion 14", "Samsung Galaxy Book", "Microsoft Surface Pro"
+    ];
+  });
+
+  const [isCustomName, setIsCustomName] = useState(false);
 
   // Fetch item data if editing an existing item
   useEffect(() => {
@@ -20,7 +34,7 @@ function AddItem() {
     }
   }, [itemID]);
 
-  // Function to fetch item data by ID
+  // Fetch item data by ID
   const fetchFormDataById = async (id) => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/api/items/${id}/`);
@@ -30,12 +44,6 @@ function AddItem() {
     }
   };
 
-  // State for input validation errors
-  const [errors, setErrors] = useState({});
-
-  // State to track API errors
-  const [apiError, setApiError] = useState("");
-
   // Handle form input changes
   const handleChange = (e) => {
     setItemData((prevState) => ({
@@ -44,30 +52,26 @@ function AddItem() {
     }));
   };
 
-  // Form validation
-  const validateForm = () => {
-    let valid = true;
+  // Validate form inputs
+  const validateForm = () => {   
     const errorsCopy = {};
+    let valid = true;
 
-    // Validate Item Name
     if (!itemData.name.trim()) {
       errorsCopy.name = 'Item Name is required!';
       valid = false;
     }
 
-    // Validate Description
     if (!itemData.description.trim()) {
       errorsCopy.description = 'Description is required!';
       valid = false;
     }
 
-    // Validate Quantity (should be a positive number)
     if (!itemData.quantity || isNaN(itemData.quantity) || Number(itemData.quantity) <= 0) {
       errorsCopy.quantity = 'Quantity must be a positive number!';
       valid = false;
     }
 
-    // Validate Price (should be a positive number)
     if (!itemData.price || isNaN(itemData.price) || Number(itemData.price) <= 0) {
       errorsCopy.price = 'Price must be a positive number!';
       valid = false;
@@ -77,13 +81,16 @@ function AddItem() {
     return valid;
   };
 
-
   // Handle Add/Edit item submission
   const handleAddEdit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;  // Prevent API call if validation fails
-    
+    if (!validateForm()) return;  // Prevent API call if validation fails    
     try {
+      if (!itemNames.includes(itemData.name)) {
+        const updatedNames = [...itemNames, itemData.name];
+        setItemNames(updatedNames);
+        localStorage.setItem("itemNames", JSON.stringify(updatedNames));
+      }
       if (itemData.item_id) {
         // Update existing item
         await axios.put(`http://127.0.0.1:8000/api/items/${itemData.item_id}/update/`, itemData, {
@@ -109,11 +116,9 @@ function AddItem() {
           confirmButtonColor: '#001b5e'
         });
       }
-
-      // Reset form fields after successful API call
-      setItemData({ name: "", description: "", quantity: "", price: "" });
+      setItemData({ name: "", description: "", quantity: "", price: "" }); // Reset form fields after successful API call
       setApiError("");  // Clear any previous API errors
-      navigate('/');  // Redirect to home page
+      navigate('/'); 
     } catch (error) {
       console.error("Error saving item:", error);
       Swal.fire({
@@ -146,8 +151,7 @@ function AddItem() {
     });
   };
 
-  const [isCustomName, setIsCustomName] = useState(false);
-
+  // Handle item name selection
   const handleNameChange = (e) => {
     const value = e.target.value;
     setIsCustomName(value === "custom");
@@ -171,64 +175,47 @@ function AddItem() {
 
                   {/* Item Name Field */}
                   <div className="sm:col-span-4 sm:row-start-2">
-    <label htmlFor="name" className="block text-base font-medium leading-6 text-gray-900">
-      Item Name
-    </label>
-    <div className="mt-2">
-      <select
-        id="name"
-        name="name"
-        autoComplete="off"
-        value={isCustomName ? "custom" : itemData.name}
-        onChange={handleNameChange}
-        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 ${
-          errors.name ? "border-red-500" : ""
-        }`}
-      >
-        <option value="" disabled>Select Item Name</option>
-        <option>MacBook Pro</option>
-        <option>PixelBook Go</option>
-        <option>Dell XPS 13</option>
-        <option>Zenbook</option>
-        <option>HP Spectre</option>
-        <option>Surface Laptop 4</option>
-        <option>PixelBook 2</option>
-        <option>Razer Blade 15</option>
-        <option>Alienware M15</option>
-        <option>Acer Predator Helios</option>
-        <option>MacBook Air</option>
-        <option>Asus ROG Strix</option>
-        <option>ThinkPad X1</option>
-        <option>MSI Stealth 15</option>
-        <option>Chromebook Plus</option>
-        <option>Lenovo Legion 5</option>
-        <option>Dell Inspiron 15</option>
-        <option>HP Pavilion 14</option>
-        <option>Samsung Galaxy Book</option>
-        <option>Microsoft Surface Pro</option>
-        <option value="custom">Custom Name</option>
-      </select>
-      {errors.name && <span className="text-red-500">{errors.name}</span>}
-    </div>
-
-    {/* Show Text Input only if Custom is Selected */}
-    {isCustomName && (
-      <div className="mt-2">
-        <input
-          type="text"
-          name="customName"
-          placeholder="Enter Custom Name"
-          value={itemData.name}
-          onChange={(e) =>
-            setItemData((prevState) => ({ ...prevState, name: e.target.value }))
-          }
-          className={`form-input ${
-            errors.name ? "border-red-500" : ""
-          } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-        />
-      </div>
-    )}
-  </div>
+                    <label htmlFor="name" className="block text-base font-medium leading-6 text-gray-900">
+                      Item Name
+                    </label>
+                    <div className="mt-2">
+                      <select
+                        id="name"
+                        name="name"
+                        placeholder="Enter Item Name"
+                        autoComplete="off"
+                        value={isCustomName ? "custom" : itemData.name}
+                        onChange={handleNameChange}
+                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 ${
+                          errors.name ? "border-red-500" : ""
+                        }`}
+                      >
+                      <option value="" disabled>Select Item Name</option>
+                      {itemNames.map((item, index) => (
+                        <option key={index} value={item}>{item}</option>
+                      ))}
+                      <option value="custom">Custom Item Name</option>
+                      </select>
+                      {errors.name && <span className="text-red-500">{errors.name}</span>}
+                    </div>
+                    {/* Show Text Input only if Custom Item Name is Selected */}
+                    {isCustomName && (
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          name="customName"
+                          placeholder="Enter Custom Item Name"
+                          value={itemData.name}
+                          onChange={(e) =>
+                            setItemData((prevState) => ({ ...prevState, name: e.target.value }))
+                          }
+                          className={`form-input ${
+                            errors.name ? "border-red-500" : ""
+                          } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                        />
+                      </div>
+                    )}
+                  </div>
 
                   {/* Description Field */}
                   <div className="sm:col-span-5 sm:row-start-3">
@@ -239,6 +226,7 @@ function AddItem() {
                       <input
                         type="text"
                         name="description"
+                        placeholder="Enter Item Description"
                         value={itemData.description}
                         onChange={handleChange}
                         className={`form-input ${errors.description ? 'border-red-500' : '' } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
@@ -254,11 +242,12 @@ function AddItem() {
                     <input
                       type="text"
                       name="quantity"
+                      placeholder="Enter Item Quantity"
                       value={itemData.quantity}
                       onChange={handleChange}
                       className={`form-input ${errors.quantity ? 'border-red-500' : '' } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                          />
-                          {errors.quantity && <div className='text-red-500'> {errors.quantity}</div>}
+                    />
+                    {errors.quantity && <div className='text-red-500'> {errors.quantity}</div>}
                     </div>
                   </div>
 
@@ -269,11 +258,12 @@ function AddItem() {
                     <input
                       type="text"
                       name="price"
+                      placeholder="Enter Item Price"
                       value={itemData.price}
                       onChange={handleChange}
                       className={`form-input ${errors.price ? 'border-red-500' : '' } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                          />
-                          {errors.price && <div className='text-red-500'> {errors.price}</div>}
+                    />
+                    {errors.price && <div className='text-red-500'> {errors.price}</div>}
                     </div>
                   </div>
 
@@ -283,7 +273,7 @@ function AddItem() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              {/* Add & Cancel Buttons */}
               <div className="flex items-center justify-end mt-5 mb-5 mr-5 gap-x-6">
                 <button 
                   type="submit" 
