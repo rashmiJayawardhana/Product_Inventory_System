@@ -150,6 +150,18 @@ function AddItem() {
                       <option>Surface Laptop 4</option>
                       <option>PixelBook 2</option>
                       <option>Razer Blade 15</option>
+                      <option>Alienware M15</option>
+                      <option>Acer Predator Helios</option>
+                      <option>MacBook Air</option>
+                      <option>Asus ROG Strix</option>
+                      <option>ThinkPad X1</option>
+                      <option>MSI Stealth 15</option>
+                      <option>Chromebook Plus</option>
+                      <option>Lenovo Legion 5</option>
+                      <option>Dell Inspiron 15</option>
+                      <option>HP Pavilion 14</option>
+                      <option>Samsung Galaxy Book</option>
+                      <option>Microsoft Surface Pro</option>
                       </select>
                       {errors.name && <span className="text-red-500">{errors.name}</span>}
                     </div>
