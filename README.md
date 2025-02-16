@@ -32,6 +32,16 @@ The Product Inventory System is a full-stack web application built using React J
 - **Backend:** Python, Django, Django REST Framework
 - **Database:** MongoDB
 
+### Libraries & Tools Used
+
+The project utilizes the following libraries:
+
+- **[SweetAlert2](https://sweetalert2.github.io/):**  
+  Used for displaying alert messages, confirmations, and success notifications.
+
+- **[React Icons](https://react-icons.github.io/react-icons/):**  
+  Used for adding scalable vector icons to the UI.
+  
 ## Installation & Setup
 
 ### Prerequisites
@@ -75,5 +85,29 @@ Ensure you have the following installed on your system:
    ```sh
    npm run dev
    ```
+
+## Contributing
+
+Contributions are welcome! If you'd like to improve this project, please follow these steps:
+
+1. **Fork the repository**
+2. **Create a new branch:**  
+   ```sh
+   git checkout -b feature-name
+   ```
+3. **Make your changes and commit:**  
+   ```sh
+   git commit -m "Added new feature"
+   ```
+4. **Push to your branch:**  
+   ```sh
+   git push origin feature-name
+   ```
+5. **Open a Pull Request**
+
+---
+
+⭐ **Star this repository** if you found this project useful!  
+📢 **Have suggestions?** Feel free to create an issue! 🚀
 
 
