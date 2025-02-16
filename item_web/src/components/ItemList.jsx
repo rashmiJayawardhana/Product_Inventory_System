@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTable, useGlobalFilter, useSortBy, usePagination } from 'react-table';
 import axios from 'axios';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { TiUserAddOutline } from "react-icons/ti";
 import { LiaUserEditSolid, LiaUserTimesSolid } from 'react-icons/lia';
+import Swal from 'sweetalert2';
 
 function NumberInput({ value, onChange }) {
     return (
@@ -151,16 +152,39 @@ function ItemList() {
   
   // Handle delete operation
   const handleDelete = async (item) => {
-    if (window.confirm("Are you sure you want to delete?")) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#001b5e",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, delete it!",
+      iconColor: "#000000"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/items/${item.item_id}/delete/`);
-            getItems();
-            alert("Item deleted successfully!");
+          await axios.delete(`http://127.0.0.1:8000/api/items/${item.item_id}/delete/`);
+          getItems();
+          Swal.fire({
+                  title: "Deleted!",
+                  text: "Item has been deleted.",
+                  icon: "success",
+                  iconColor: "#000000",
+                  confirmButtonColor: '#001b5e'
+          });      
         } catch (error) {
-            console.error("Error deleting item:", error);
-            alert("Failed to delete item.");
+          console.error("Error deleting item:", error);
+          Swal.fire({
+                  title: "Error",
+                  text: "Failed to delete item.",
+                  icon: "error",
+                  iconColor: "#000000",
+                  confirmButtonColor: '#001b5e'
+          });    
         }
-    }
+      }
+    });
   };
 
   const addNewItem = () => {

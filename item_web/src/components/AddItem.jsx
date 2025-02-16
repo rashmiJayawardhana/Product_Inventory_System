@@ -89,13 +89,25 @@ function AddItem() {
         await axios.put(`http://127.0.0.1:8000/api/items/${itemData.item_id}/update/`, itemData, {
           headers: { "Content-Type": "application/json" },
         });
-        Swal.fire("Success", "Item updated successfully!", "success");
+        Swal.fire({
+          title: "Success",
+          text: "Item updated successfully!",
+          icon: "success",
+          iconColor: "#000000",
+          confirmButtonColor: '#001b5e'
+        });
       } else {
         // Create new item
         await axios.post("http://127.0.0.1:8000/api/items/", itemData, {
           headers: { "Content-Type": "application/json" },
         });
-        Swal.fire("Success", "Item added successfully!", "success");
+        Swal.fire({
+          title: "Success",
+          text: "Item added successfully!",
+          icon: "success",
+          iconColor: "#000000",
+          confirmButtonColor: '#001b5e'
+        });
       }
 
       // Reset form fields after successful API call
@@ -104,15 +116,45 @@ function AddItem() {
       navigate('/');  // Redirect to home page
     } catch (error) {
       console.error("Error saving item:", error);
-      Swal.fire("Error", "Failed to save item", "error");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to save item",
+        icon: "error",
+        iconColor: "#000000",
+        confirmButtonColor: '#001b5e'
+      });
       setApiError("Failed to save item. Please try again.");
     }
   };
 
   // Handle Cancel button click
   const handleCancel = () => {
-    navigate('/');
-    setItemData({ name: "", description: "", quantity: "", price: "" }); // Reset form
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Unsaved changes will be lost!",
+      icon: "warning",
+      iconColor: "#000000",
+      showCancelButton: true,
+      confirmButtonColor: '#001b5e',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: "Yes, go back!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate('/');
+        setItemData({ name: "", description: "", quantity: "", price: "" });
+      }
+    });
+  };
+
+  const [isCustomName, setIsCustomName] = useState(false);
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    setIsCustomName(value === "custom");
+    setItemData((prevState) => ({
+      ...prevState,
+      name: value === "custom" ? "" : value, // Clear input if "Custom" is selected
+    }));
   };
 
   return (
@@ -129,43 +171,64 @@ function AddItem() {
 
                   {/* Item Name Field */}
                   <div className="sm:col-span-4 sm:row-start-2">
-                    <label htmlFor="name" className="block text-base font-medium leading-6 text-gray-900">
-                      Item Name
-                    </label>
-                    <div className="mt-2">
-                      <select
-                        id="name"
-                        name="name"
-                        autoComplete="off"
-                        value={itemData.name}
-                        onChange={handleChange}
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 ${errors.name ? 'border-red-500' : ''}`}
-                      >
-                      <option value="" disabled>Select Item Name</option>
-                      <option>MacBook Pro</option>
-                      <option>PixelBook Go</option>
-                      <option>Dell XPS 13</option>
-                      <option>Zenbook</option>
-                      <option>HP Spectre</option>
-                      <option>Surface Laptop 4</option>
-                      <option>PixelBook 2</option>
-                      <option>Razer Blade 15</option>
-                      <option>Alienware M15</option>
-                      <option>Acer Predator Helios</option>
-                      <option>MacBook Air</option>
-                      <option>Asus ROG Strix</option>
-                      <option>ThinkPad X1</option>
-                      <option>MSI Stealth 15</option>
-                      <option>Chromebook Plus</option>
-                      <option>Lenovo Legion 5</option>
-                      <option>Dell Inspiron 15</option>
-                      <option>HP Pavilion 14</option>
-                      <option>Samsung Galaxy Book</option>
-                      <option>Microsoft Surface Pro</option>
-                      </select>
-                      {errors.name && <span className="text-red-500">{errors.name}</span>}
-                    </div>
-                  </div>
+    <label htmlFor="name" className="block text-base font-medium leading-6 text-gray-900">
+      Item Name
+    </label>
+    <div className="mt-2">
+      <select
+        id="name"
+        name="name"
+        autoComplete="off"
+        value={isCustomName ? "custom" : itemData.name}
+        onChange={handleNameChange}
+        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 ${
+          errors.name ? "border-red-500" : ""
+        }`}
+      >
+        <option value="" disabled>Select Item Name</option>
+        <option>MacBook Pro</option>
+        <option>PixelBook Go</option>
+        <option>Dell XPS 13</option>
+        <option>Zenbook</option>
+        <option>HP Spectre</option>
+        <option>Surface Laptop 4</option>
+        <option>PixelBook 2</option>
+        <option>Razer Blade 15</option>
+        <option>Alienware M15</option>
+        <option>Acer Predator Helios</option>
+        <option>MacBook Air</option>
+        <option>Asus ROG Strix</option>
+        <option>ThinkPad X1</option>
+        <option>MSI Stealth 15</option>
+        <option>Chromebook Plus</option>
+        <option>Lenovo Legion 5</option>
+        <option>Dell Inspiron 15</option>
+        <option>HP Pavilion 14</option>
+        <option>Samsung Galaxy Book</option>
+        <option>Microsoft Surface Pro</option>
+        <option value="custom">Custom Name</option>
+      </select>
+      {errors.name && <span className="text-red-500">{errors.name}</span>}
+    </div>
+
+    {/* Show Text Input only if Custom is Selected */}
+    {isCustomName && (
+      <div className="mt-2">
+        <input
+          type="text"
+          name="customName"
+          placeholder="Enter Custom Name"
+          value={itemData.name}
+          onChange={(e) =>
+            setItemData((prevState) => ({ ...prevState, name: e.target.value }))
+          }
+          className={`form-input ${
+            errors.name ? "border-red-500" : ""
+          } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+        />
+      </div>
+    )}
+  </div>
 
                   {/* Description Field */}
                   <div className="sm:col-span-5 sm:row-start-3">
