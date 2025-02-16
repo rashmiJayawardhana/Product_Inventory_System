@@ -144,6 +144,12 @@ function AddItem() {
                       <option value="" disabled>Select Item Name</option>
                       <option>MacBook Pro</option>
                       <option>PixelBook Go</option>
+                      <option>Dell XPS 13</option>
+                      <option>Zenbook</option>
+                      <option>HP Spectre</option>
+                      <option>Surface Laptop 4</option>
+                      <option>PixelBook 2</option>
+                      <option>Razer Blade 15</option>
                       </select>
                       {errors.name && <span className="text-red-500">{errors.name}</span>}
                     </div>
