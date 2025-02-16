@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Product Inventory System is a full-stack web application built using React JS, Tailwind CSS, Python (Django), and MongoDB. This project enables users to efficiently manage product inventory, perform CRUD operations, and interact with a REST API seamlessly. Additionally, it includes a React Table with advanced features like searching, sorting, and pagination, ensuring an optimal user experience.
+The Product Inventory System is a full-stack web application built using React JS, Tailwind CSS, Python (Django), and MongoDB. This project enables users to efficiently manage product inventory. 
 
 ## Features
 
@@ -15,6 +15,18 @@ The Product Inventory System is a full-stack web application built using React J
 - **User-Friendly UI:** Tailwind CSS provides a modern and responsive design.
 - **MongoDB Database:** NoSQL database for flexible and scalable data storage.
 - **End-to-End Testing:** Ensures that all features work seamlessly from frontend to backend.
+- **SweetAlert2 for Alerts:** Used for displaying confirmation and notification alerts.
+- **React Icons for UI Enhancements:** Icons are implemented using React Icons for a better user interface.
+
+## Screenshots
+
+### Item List Page
+![Item List](./path-to-your-image/Screenshot-27.png)
+![Screenshot (27)](https://github.com/user-attachments/assets/ef2760b4-4153-4e3e-853f-cfd36bf15c09)
+
+### Add Item Page
+![Add Item](./path-to-your-image/Screenshot-28.png)
+![Screenshot (28)](https://github.com/user-attachments/assets/a336dcd0-e7ad-4d4a-8563-9bb2c86035f5)
 
 ## Tech Stack
 
