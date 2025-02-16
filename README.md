@@ -24,7 +24,6 @@ The Product Inventory System is a full-stack web application built using React J
 ![Screenshot (27)](https://github.com/user-attachments/assets/ef2760b4-4153-4e3e-853f-cfd36bf15c09)
 
 ### Add Item Page
-![Add Item](./path-to-your-image/Screenshot-28.png)
 ![Screenshot (28)](https://github.com/user-attachments/assets/a336dcd0-e7ad-4d4a-8563-9bb2c86035f5)
 
 ## Tech Stack
