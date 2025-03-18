@@ -44,7 +44,7 @@ function ItemList() {
                 price: itemToUpdate.price,
                 quantity: newQuantity 
             },  
-            { headers: { 'Content-Type': 'application/json' } }
+            { headers: { 'Content-Type': 'application/json' } }  //Sets Content-Type as application/json to ensure proper data format
         );
         console.log("Update successful:", response.data);
 
@@ -87,7 +87,7 @@ function ItemList() {
         <div className="flex gap-2 px-2 py-3">    
           <button 
             className='inline-flex items-center flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-[#101d3f] dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100' 
-            onClick={() => handleEdit(row.original)} 
+            onClick={() => handleEdit(row.original)}   //row.original gives the entire data object of the row.
             type="button">
             <div><LiaUserEditSolid size={20} /></div>
             <div>Edit</div>
@@ -146,7 +146,7 @@ function ItemList() {
       if (result.isConfirmed) {
         try {
           await axios.delete(`http://127.0.0.1:8000/api/items/${item.item_id}/delete/`);
-          getItems();
+          fetchItems();
           Swal.fire({
                   title: "Deleted!",
                   text: "Item has been deleted.",
@@ -177,6 +177,7 @@ function ItemList() {
     <div className="relative bg-zinc-100 bg-cover h-fit w-screen p-5 pt-3">
       <div className="m-3 text-xl font-semibold text-gray-900"></div>
       <h1 className="pt-2 pb-1 ml-5 place-items-baseline text-4xl leading-relaxed py-4 tracking-tight font-bold text-left text-[#001b5e]">Item List</h1>
+      
         <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">
           <div className="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4">
             {/*Add New Item Button*/}
